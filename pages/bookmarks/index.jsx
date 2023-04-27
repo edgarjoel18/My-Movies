@@ -16,13 +16,11 @@ export default function Bookmarks() {
     let newMovies = [...bookMarkedMovies];
     let index = newMovies.indexOf(movie);
     newMovies.splice(index, 1);
-    console.log(newMovies);
     localStorage.setItem("bookmarks", JSON.stringify(newMovies));
     setBookMarkedMovies(newMovies);
   };
 
   const handleWatch = (movieId, event) => {
-    console.log(event);
     if (event.detail === 0) {
       return;
     }
@@ -41,10 +39,6 @@ export default function Bookmarks() {
     };
     seenDB.push(newObj);
     localStorage.setItem("moviesSeen", JSON.stringify(seenDB));
-    // console.log("Before: ", newMovies[index].watched);
-    // newMovies[index].watched = !newMovies[index].watched;
-    // console.log("After: ", newMovies[index].watched);
-    // setSearchedMovies(newMovies);
   };
 
   const renderMovies =

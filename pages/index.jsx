@@ -11,7 +11,6 @@ export default function Home({ data, context }) {
   const [searchedMovies, setSearchedMovies] = useState([]);
 
   useEffect(() => {
-    console.log("hard reload");
     if (!localStorage.getItem("bookmarks")) {
       localStorage.setItem("bookmarks", JSON.stringify([]));
     }
@@ -49,7 +48,6 @@ export default function Home({ data, context }) {
   };
 
   const handleWatch = (movieId, event) => {
-    console.log(event);
     if (event.detail === 0) {
       return;
     }
@@ -85,7 +83,6 @@ export default function Home({ data, context }) {
 
   const handleSearchMovie = async (event) => {
     event.preventDefault();
-    console.log("Searching");
     const { currentTarget = {} } = event;
     const fields = Array.from(currentTarget?.elements);
     const fieldQuery = fields.find((field) => field.name === "query");
