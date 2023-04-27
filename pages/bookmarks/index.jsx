@@ -15,9 +15,8 @@ export default function Bookmarks() {
   const removeBookmark = (movie) => {
     let newMovies = [...bookMarkedMovies];
     let index = newMovies.indexOf(movie);
-    newMovies.splice(index);
+    newMovies.splice(index, 1);
     localStorage.setItem("bookmarks", JSON.stringify(newMovies));
-    console.log(newMovies);
     setBookMarkedMovies(newMovies);
   };
 
