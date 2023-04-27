@@ -30,8 +30,8 @@ export default function Bookmarks() {
     let index = newMovies.findIndex((movie) => movie.imdbID === movieId);
     let seenDB = JSON.parse(localStorage.getItem("moviesSeen"));
     let tempindex = seenDB.findIndex((m) => m.imdbID === movieId);
-    if (tempindex > 0) {
-      seenDB.splice(tempindex, 1);
+    if (tempindex >= 0) {
+      seenDB.splice(tempindex);
       localStorage.setItem("moviesSeen", JSON.stringify(seenDB));
       return;
     }
