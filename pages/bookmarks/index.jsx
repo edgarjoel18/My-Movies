@@ -16,8 +16,35 @@ export default function Bookmarks() {
     let newMovies = [...bookMarkedMovies];
     let index = newMovies.indexOf(movie);
     newMovies.splice(index, 1);
+    console.log(newMovies);
     localStorage.setItem("bookmarks", JSON.stringify(newMovies));
     setBookMarkedMovies(newMovies);
+  };
+
+  const handleWatch = (movieId, event) => {
+    console.log(event);
+    if (event.detail === 0) {
+      return;
+    }
+    let newMovies = [...bookMarkedMovies];
+    let index = newMovies.findIndex((movie) => movie.imdbID === movieId);
+    let seenDB = JSON.parse(localStorage.getItem("moviesSeen"));
+    let tempindex = seenDB.findIndex((m) => m.imdbID === movieId);
+    if (tempindex > 0) {
+      seenDB.splice(tempindex, 1);
+      localStorage.setItem("moviesSeen", JSON.stringify(seenDB));
+      return;
+    }
+    let newObj = {
+      ...newMovies[index],
+      watched: !newMovies[index].watched,
+    };
+    seenDB.push(newObj);
+    localStorage.setItem("moviesSeen", JSON.stringify(seenDB));
+    // console.log("Before: ", newMovies[index].watched);
+    // newMovies[index].watched = !newMovies[index].watched;
+    // console.log("After: ", newMovies[index].watched);
+    // setSearchedMovies(newMovies);
   };
 
   const renderMovies =
@@ -27,7 +54,12 @@ export default function Bookmarks() {
       bookMarkedMovies.map((movie) => {
         return (
           <div key={movie.Title}>
-            <MovieCard movieData={movie} onRemove={removeBookmark} />
+            <MovieCard
+              movieData={movie}
+              onRemove={removeBookmark}
+              onWatch={handleWatch}
+              seenMovies={localStorage.getItem("moviesSeen")}
+            />
           </div>
         );
       })

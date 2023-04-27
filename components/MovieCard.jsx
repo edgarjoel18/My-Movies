@@ -20,8 +20,7 @@ const data = {
   numReviews: 34,
 };
 
-function MovieCard({ movieData, onBookmark, onRemove }) {
-  const isValid = onRemove;
+function MovieCard({ movieData, onBookmark, onRemove, onWatch, seenMovies }) {
   const renderButton = onRemove ? (
     <CloseIcon
       w={6}
@@ -30,6 +29,8 @@ function MovieCard({ movieData, onBookmark, onRemove }) {
       onClick={() => onRemove(movieData)}
     />
   ) : null;
+  let temp = JSON.parse(seenMovies);
+  let index = temp.findIndex((m) => m.imdbID === movieData.imdbID);
 
   return (
     <Flex p={50} w="full" alignItems="center" justifyContent="center">
@@ -70,8 +71,12 @@ function MovieCard({ movieData, onBookmark, onRemove }) {
               {movieData.Title}
             </Box>
             <Tooltip>
-              <chakra.a href={"#"} display={"flex"}>
-                <Checkbox defaultChecked={false}>Watched</Checkbox>
+              <chakra.a
+                href={"#"}
+                display={"flex"}
+                onClick={(event) => onWatch(movieData.imdbID, event)}
+              >
+                <Checkbox defaultChecked={index >= 0}>Watched</Checkbox>
               </chakra.a>
             </Tooltip>
           </Flex>

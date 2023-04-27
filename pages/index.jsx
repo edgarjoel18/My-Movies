@@ -11,15 +11,26 @@ export default function Home({ data, context }) {
   const [searchedMovies, setSearchedMovies] = useState([]);
 
   useEffect(() => {
+    console.log("hard reload");
     if (!localStorage.getItem("bookmarks")) {
       localStorage.setItem("bookmarks", JSON.stringify([]));
     }
+    if (!localStorage.getItem("moviesSeen")) {
+      localStorage.setItem("moviesSeen", JSON.stringify([]));
+    }
     const makeRequest = async () => {
       const result = await axios.get("/api/");
-      setSearchedMovies(result.data);
+      let newMovies = result.data.map((movie) => {
+        return {
+          ...movie,
+          watched: false,
+        };
+      });
+      setSearchedMovies(newMovies);
     };
     makeRequest();
   }, []);
+
   const handleBookmark = (movie) => {
     const movieItem = searchedMovies.find(
       (currentMovie) => currentMovie.imdbID === movie.imdbID
@@ -37,10 +48,37 @@ export default function Home({ data, context }) {
     localStorage.setItem("bookmarks", JSON.stringify(movieDB));
   };
 
+  const handleWatch = (movieId, event) => {
+    console.log(event);
+    if (event.detail === 0) {
+      return;
+    }
+    let newMovies = [...searchedMovies];
+    let index = newMovies.findIndex((movie) => movie.imdbID === movieId);
+    let seenDB = JSON.parse(localStorage.getItem("moviesSeen"));
+    let tempindex = seenDB.findIndex((m) => m.imdbID === movieId);
+    if (tempindex > 0) {
+      seenDB.splice(tempindex, 1);
+      localStorage.setItem("moviesSeen", JSON.stringify(seenDB));
+      return;
+    }
+    let newObj = {
+      ...newMovies[index],
+      watched: !newMovies[index].watched,
+    };
+    seenDB.push(newObj);
+    localStorage.setItem("moviesSeen", JSON.stringify(seenDB));
+  };
+
   const renderMovies = searchedMovies.map((movie) => {
     return (
       <div key={movie.imdbID}>
-        <MovieCard movieData={movie} onBookmark={() => handleBookmark(movie)} />
+        <MovieCard
+          movieData={movie}
+          onBookmark={() => handleBookmark(movie)}
+          onWatch={handleWatch}
+          seenMovies={localStorage.getItem("moviesSeen")}
+        />
       </div>
     );
   });
